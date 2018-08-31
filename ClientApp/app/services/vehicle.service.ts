@@ -37,7 +37,7 @@ export class VehicleService {
             ModelId: data.modelId,
             MakeId:data.makeId
         }
-        return this.http.post('http://localhost:4046/api/vehicles', model)
+        return this.http.post('http://localhost:4047/api/vehicles', model)
       .map(res => res.json())
       .catch(err=>this.handleError(err,"Error in create vehicle action."));
   }

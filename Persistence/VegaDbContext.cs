@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using vega.Core.Models;
 
 namespace vega.Persistence
 {
-    public class VegaDbContext:DbContext
+    public class VegaDbContext: IdentityDbContext<AppUser>
     {
         public DbSet<Make> Makes { get; set; }
         public DbSet<Model> Models { get; set; }
@@ -21,6 +22,8 @@ namespace vega.Persistence
         
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<VehicleFeature>().HasKey(x => 
               new { x.VehicleId, x.FeatureId });
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using vega.Controllers.Resources;
 using vega.Core;
 using vega.Core.Models;
+using vega.Core.Models.ViewModels;
 using vega.Persistence;
 
 namespace vega.Mapping
@@ -16,6 +17,7 @@ namespace vega.Mapping
         public MappingProfile()
         {
 
+            CreateMap<RegistrationViewModel, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
             // Domain to API Resource
             CreateMap<Photo, PhotoResource>();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
@@ -39,6 +41,8 @@ namespace vega.Mapping
               .ForMember(v => v.ContactEmail, opt => opt.MapFrom(vr => vr.Contact.Email))
               .ForMember(v => v.ContactPhone, opt => opt.MapFrom(vr => vr.Contact.Phone))
               .ForMember(v => v.Features, opt => opt.Ignore());
+
+
         }
 
         private class VehicleQueryResource

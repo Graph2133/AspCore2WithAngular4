@@ -7,17 +7,21 @@ import { BrowserXhr } from "@angular/http";
 export class ProgressService {
   private uploadProgress: Subject<any>;
 
-  startTracking() { 
+  startTracking() {
     this.uploadProgress = new Subject();
     return this.uploadProgress;
   }
 
   notify(progress: any) {
-    this.uploadProgress.next(progress);
+    if (this.uploadProgress) {
+      this.uploadProgress.next(progress);
+    }
   }
 
   endTracking() {
-    this.uploadProgress.complete();
+    if (this.uploadProgress) {
+      this.uploadProgress.complete();
+    }
   }
 }
 
@@ -28,7 +32,7 @@ export class BrowserXhrWithProgress extends BrowserXhr {
 
   build(): XMLHttpRequest {
     var xhr: XMLHttpRequest = super.build();
-    
+
     xhr.upload.onprogress = (event) => {
       this.service.notify(this.createProgress(event));
     };
@@ -36,14 +40,14 @@ export class BrowserXhrWithProgress extends BrowserXhr {
     xhr.upload.onloadend = () => {
       this.service.endTracking();
     }
-    
-    return xhr; 
+
+    return xhr;
   }
 
   private createProgress(event: ProgressEvent) {
     return {
-        total: event.total,
-        percentage: Math.round(event.loaded / event.total * 100)
+      total: event.total,
+      percentage: Math.round(event.loaded / event.total * 100)
     };
   }
 }

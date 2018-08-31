@@ -1,4 +1,3 @@
-
 <div class='main-nav'>
     <div class='navbar navbar-inverse'>
         <div class='navbar-header'>
@@ -13,7 +12,17 @@
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse'>
             <ul class='nav navbar-nav'>
-                <li [routerLinkActive]="['link-active']"  [routerLinkActiveOptions]="{exact: true}">
+                    <li>
+                            <a [routerLink]="['/spinner']">
+                                <span class='glyphicon glyphicon-home'></span> Loaders
+                            </a>
+                        </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/register']">
+                        <span class='glyphicon glyphicon-home'></span> Register
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{exact: true}">
                     <a [routerLink]="['/vehicles']">
                         <span class='glyphicon glyphicon-home'></span> Vehicles
                     </a>

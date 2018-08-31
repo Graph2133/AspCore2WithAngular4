@@ -12,17 +12,24 @@ using Microsoft.Extensions.DependencyInjection;
 using vega.Core;
 using vega.Persistence;
 using vega.Core.Models;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using vega.Extensions;
+
 namespace vega
 {
     public class Startup
     {
         public Startup(IHostingEnvironment env)
         {
-              var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
+            var builder = new ConfigurationBuilder()
+              .SetBasePath(env.ContentRootPath)
+              .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+              .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+              .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
@@ -32,13 +39,30 @@ namespace vega
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
-            services.AddAutoMapper();
-            services.AddDbContext<VegaDbContext>(options=>
+            services.AddDbContext<VegaDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddMvc();
+
+
+            //===== identity (registration model configuration)====
+            var builder = services.AddIdentityCore<AppUser>(o =>
+              {
+                  // configure identity options
+                  o.Password.RequireDigit = false;
+                  o.Password.RequireLowercase = false;
+                  o.Password.RequireUppercase = false;
+                  o.Password.RequireNonAlphanumeric = false;
+                  o.Password.RequiredLength = 6;
+              });
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+            builder.AddEntityFrameworkStores<VegaDbContext>().AddDefaultTokenProviders();
+            //=====
+
+
+            services.AddAutoMapper();
+            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,16 +73,37 @@ namespace vega
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
-                HotModuleReplacement = true
+                    HotModuleReplacement = true
                 });
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+
+                // Display some server errors 
+                app.UseExceptionHandler(
+                builder =>
+                {
+                    builder.Run(
+                            async context =>
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                                context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                                var error = context.Features.Get<IExceptionHandlerFeature>();
+                                if (error != null)
+                                {
+                                    context.Response.AddApplicationError(error.Error.Message);
+                                    await context.Response.WriteAsync(error.Error.Message).ConfigureAwait(false);
+                                }
+                            });
+                });
             }
 
-            app.UseStaticFiles();
 
+
+
+
+            app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
