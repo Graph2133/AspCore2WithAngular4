@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using vega.Controllers.Resources;
@@ -10,6 +11,7 @@ using vega.Persistence;
 
 namespace vega.Controllers
 {
+    [Authorize (Roles="api_access")]
     public class MakesController : Controller
     {
         private readonly IMapper _mapper;

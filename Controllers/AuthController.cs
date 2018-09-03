@@ -1,49 +1,70 @@
-using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using vega.Core.Models;
+using vega.Core.Models.AuthModels;
 using vega.Core.Models.ViewModels;
 using vega.Extensions.Helpers;
+using vega.Extensions.TokenAuth;
 using vega.Persistence;
 
 namespace vega.Controllers
 {
-   [Route("api/[controller]")] 
-    public class AccountsController : Controller
+    [Route("api/[controller]")]
+    public class AuthController : Controller
     {
-        private readonly VegaDbContext _appDbContext;
         private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
+        private readonly IJwtFactory _jwtFactory;
+        private readonly JwtIssuerOptions _jwtOptions;
 
-        public AccountsController(UserManager<AppUser> userManager, IMapper mapper, VegaDbContext appDbContext)
+        public AuthController(UserManager<AppUser> userManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
         {
             _userManager = userManager;
-            _mapper = mapper;
-            _appDbContext = appDbContext;
+            _jwtFactory = jwtFactory;
+            _jwtOptions = jwtOptions.Value;
         }
 
-        // POST api/accounts
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody]RegistrationViewModel model)
+        // POST api/auth/login
+        [HttpPost("login")]
+        public async Task<IActionResult> Post([FromBody]CredentialsViewModel credentials)
         {
             if (!ModelState.IsValid)
             {
-                Console.WriteLine(222222222222222);
                 return BadRequest(ModelState);
             }
-            Console.WriteLine(111111111111111111);
-            var userIdentity = _mapper.Map<AppUser>(model);
 
-            var result = await _userManager.CreateAsync(userIdentity, model.Password);
+            var identity = await GetClaimsIdentity(credentials.UserName, credentials.Password);
+            if (identity == null)
+            {
+                return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid username or password.", ModelState));
+            }
 
-            if (!result.Succeeded) 
-                return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
+          var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
+          return new OkObjectResult(jwt);
+        }
 
-            await _appDbContext.SaveChangesAsync();
+        private async Task<ClaimsIdentity> GetClaimsIdentity(string userName, string password)
+        {
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+                return await Task.FromResult<ClaimsIdentity>(null);
 
-            return new OkObjectResult("Account created");
+            // get the user to verifty
+            var userToVerify = await _userManager.FindByNameAsync(userName);
+
+            if (userToVerify == null) return await Task.FromResult<ClaimsIdentity>(null);
+
+            // check the credentials
+            if (await _userManager.CheckPasswordAsync(userToVerify, password))
+            {
+                return await _jwtFactory.GenerateClaimsIdentity(userName, userToVerify.Id);
+            }
+
+            // Credentials are invalid, or account doesn't exist
+            return await Task.FromResult<ClaimsIdentity>(null);
         }
     }
 }
