@@ -1786,6 +1786,11 @@
       "integrity": "sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=",
       "dev": true
     },
+    "angular2-jwt": {
+      "version": "0.2.3",
+      "resolved": "https://registry.npmjs.org/angular2-jwt/-/angular2-jwt-0.2.3.tgz",
+      "integrity": "sha1-VO/do87tuoX2o3sWXyKsIrit8CE="
+    },
     "angular2-router-loader": {
       "version": "0.3.5",
       "resolved": "https://registry.npmjs.org/angular2-router-loader/-/angular2-router-loader-0.3.5.tgz",
@@ -8542,21 +8547,6 @@
       "resolved": "https://registry.npmjs.org/ng2-toasty/-/ng2-toasty-4.0.3.tgz",
       "integrity": "sha1-6njvjRh1fUHrq6Eb2fkKVD9Y/Xo="
     },
-    "ngx-toastr": {
-      "version": "8.8.0",
-      "resolved": "https://registry.npmjs.org/ngx-toastr/-/ngx-toastr-8.8.0.tgz",
-      "integrity": "sha512-b24vSJaMuuuLUNT4Ly5GF5xoC2uWTa+VfNdHAkW9PkqsKIlTzecHevQElFSoYsVSD7sHtes6QyDS6eKje3jq6g==",
-      "requires": {
-        "tslib": "1.9.3"
-      },
-      "dependencies": {
-        "tslib": {
-          "version": "1.9.3",
-          "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.9.3.tgz",
-          "integrity": "sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ=="
-        }
-      }
-    },
     "nice-try": {
       "version": "1.0.4",
       "resolved": "https://registry.npmjs.org/nice-try/-/nice-try-1.0.4.tgz",
@@ -12898,6 +12888,11 @@
       "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.2.1.tgz",
       "integrity": "sha512-jZnMwlb9Iku/O3smGWvZhauCf6cvvpKi4BKRiliS3cxnI+Gz9j5MEpTz2UFuXiKPJocb7gnsLHwiS05ige5BEA==",
       "dev": true
+    },
+    "v1": {
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/v1/-/v1-1.0.0.tgz",
+      "integrity": "sha1-i1lP0WeWtjO2L5Xox1+CbBgxXZg="
     },
     "v8-compile-cache": {
       "version": "2.0.0",

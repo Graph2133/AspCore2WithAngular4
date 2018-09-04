@@ -53,7 +53,7 @@ namespace vega
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddSingleton<IJwtFactory, JwtFactory>();
+            services.AddScoped<IJwtFactory, JwtFactory>();
 
             //===== identity (registration model configuration)====
             var builder = services.AddIdentityCore<AppUser>(o =>
@@ -158,7 +158,6 @@ namespace vega
             ConfigureDefaultRoles(serviceProvider).Wait();
             ConfigureSuperUser(serviceProvider).Wait();
         }
-
 
         //Admin setup
         private async Task ConfigureSuperUser(IServiceProvider serviceProvider)

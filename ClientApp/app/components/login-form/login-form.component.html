@@ -1,0 +1,37 @@
+<div class="row" style="padding-top:50px;">
+  <div class="col-md-offset-3 col-md-6 new-user-alert"> 
+    <h2 class="title text-center">Welcome!</h2>
+    <div *ngIf="brandNew" class="alert alert-success" role="alert">
+      <strong>All set!</strong> Please login with your account
+    </div>
+  </div>
+</div>
+<app-spinner [isRunning]="isRequesting"></app-spinner>
+<div class="row">
+  <div class="col-md-offset-3 col-md-6">
+    <form #f="ngForm" novalidate (ngSubmit)="login(f)">
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="text" required name="email" class="form-control" placeholder="Email" [ngModel]="credentials.email"
+          #email="ngModel" tmFocus validateEmail>
+        <small [hidden]="email.valid || (email.pristine && !submitted)" class="text-danger">Please enter a valid email</small>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" required name="password" placeholder="Password"
+          ngModel>
+      </div>
+
+      <div class="form-group text-right">
+        <button type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">LOGIN</button>
+      </div>
+
+      <div *ngIf="errors" class="alert alert-danger" role="alert">
+        <strong>Something went wrong!</strong>
+        <div [innerHtml]="errors"></div>
+      </div>
+
+    </form>
+  </div>
+</div>

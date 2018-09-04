@@ -11,7 +11,6 @@ using vega.Persistence;
 
 namespace vega.Controllers
 {
-    [Authorize (Roles="api_access")]
     public class MakesController : Controller
     {
         private readonly IMapper _mapper;

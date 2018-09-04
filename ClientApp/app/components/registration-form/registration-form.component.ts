@@ -13,7 +13,7 @@ import { ToastyService } from 'ng2-toasty';
 export class RegistrationFormComponent implements OnInit {
 
   errors: string;  
-  isRequesting: boolean;
+  isRequesting: boolean = false;
   submitted: boolean = false;
 
   constructor(private userService: UserService,

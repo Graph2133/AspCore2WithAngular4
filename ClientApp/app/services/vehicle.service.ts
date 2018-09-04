@@ -17,6 +17,11 @@ export class VehicleService {
 
   }
   getMakes() {
+  /*  const token = localStorage.getItem('token');
+    let headers = new Headers();
+    headers.append('Authorization', "Bearer "+ token);
+    let options = new RequestOptions({ headers: headers });
+    */
     return this.http.get("/api/makes")
       .map((res) => res.json())
       .catch(err=>this.handleError(err));

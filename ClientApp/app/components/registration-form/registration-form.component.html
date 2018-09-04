@@ -4,7 +4,7 @@
   </div>
 </div>
 <hr>
-    <app-spinner [isRunning]="isRequesting"></app-spinner>
+<app-spinner [isRunning]="isRequesting"></app-spinner>
 <div class="row">
   <form #f="ngForm" novalidate (ngSubmit)="registerUser(f)">
     <div class="col-md-6">
@@ -37,8 +37,9 @@
         <button type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">Sign Up</button>
       </div>
       <div *ngIf="errors" class="alert alert-danger" role="alert">
-          <strong>Something went wrong!</strong> <div [innerHtml]="errors"></div>
-        </div>
+        <strong>Something went wrong!</strong>
+        <div [innerHtml]="errors"></div>
+      </div>
     </div>
   </form>
 </div>
