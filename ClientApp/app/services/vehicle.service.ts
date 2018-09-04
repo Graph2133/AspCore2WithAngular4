@@ -11,24 +11,20 @@ import { SaveVehicle } from '../models/vehicle';
 
 @Injectable()
 export class VehicleService {
+  private readonly baseUrl: string = 'http://localhost:4047/';
   constructor(
     private http: Http,
     private toastyService:ToastyService) {
 
   }
   getMakes() {
-  /*  const token = localStorage.getItem('token');
-    let headers = new Headers();
-    headers.append('Authorization', "Bearer "+ token);
-    let options = new RequestOptions({ headers: headers });
-    */
-    return this.http.get("/api/makes")
+    return this.http.get(this.baseUrl+"api/makes")
       .map((res) => res.json())
       .catch(err=>this.handleError(err));
   }
 
   getFeatures() {
-    return this.http.get("/api/features")
+    return this.http.get(this.baseUrl+"api/features")
       .map((res) => res.json())
       .catch(err=>this.handleError(err,"Error in get feature action."));
   }
@@ -42,13 +38,13 @@ export class VehicleService {
             ModelId: data.modelId,
             MakeId:data.makeId
         }
-        return this.http.post('http://localhost:4047/api/vehicles', model)
+        return this.http.post(this.baseUrl+"api/vehicles", model)
       .map(res => res.json())
       .catch(err=>this.handleError(err,"Error in create vehicle action."));
   }
 
   getVehicle(id:any){
-    return this.http.get('/api/vehicles/'+id)
+    return this.http.get(this.baseUrl+"api/vehicles/"+id)
     .map(res=>res.json())
     .catch(err=>this.handleError(err,"Error in get vehicle action."));
   }
@@ -72,19 +68,19 @@ export class VehicleService {
   }
 
   update(vehicle:SaveVehicle){
-    return this.http.put('/api/vehicles/'+vehicle.id,vehicle)
+    return this.http.put(this.baseUrl+"api/vehicles/"+vehicle.id,vehicle)
     .map(res=>res.json())
     .catch(err=>this.handleError(err,"Error in update action."));
   }
 
   delete(id:any) {
-    return this.http.delete('/api/vehicles/' + id)
+    return this.http.delete(this.baseUrl+"api/vehicles/" + id)
       .map(res => res.json())
       .catch(err=>this.handleError(err,"Error in delete action."));;
   }
 
   getVehicles(filter:any) {
-    return this.http.get('/api/vehicles'+ '?' + this.toQueryString(filter))
+    return this.http.get(this.baseUrl+"api/vehicles"+ "?" + this.toQueryString(filter))
       .map(res => res.json());
   }
 

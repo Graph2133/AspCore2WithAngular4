@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -15,7 +17,7 @@ namespace vega.Extensions.TokenAuth
         private readonly JwtIssuerOptions _jwtOptions;
         private UserManager<AppUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-        public JwtFactory(IOptions<JwtIssuerOptions> jwtOptions,UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        public JwtFactory(IOptions<JwtIssuerOptions> jwtOptions, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _jwtOptions = jwtOptions.Value;
             _userManager = userManager;
@@ -26,13 +28,13 @@ namespace vega.Extensions.TokenAuth
         public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
         {
             var claims = new[]
-         {
+            {
                  new Claim(JwtRegisteredClaimNames.Sub, userName),
                  new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                  identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Role), //role of user
                  identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id)
-             };
+            };
 
             // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
@@ -50,13 +52,17 @@ namespace vega.Extensions.TokenAuth
         // generates user claims, u can add anything you want (id and role in this sample)
         public async Task<ClaimsIdentity> GenerateClaimsIdentity(string userName, string id)
         {
-            var user = await  _userManager.FindByNameAsync(userName);
-            var roles = await  _userManager.GetRolesAsync(user); 
-            return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
-            {
-                new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Id, id),
-                new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Role,String.Join(",", roles))
-            });
+            var user = await _userManager.FindByNameAsync(userName);
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+            List<Claim> claims = new List<Claim>();
+            // roles adding (result will be role:["Admin","Member"])
+            // if you add add smth like role: Admin,Member there will be api 403 (Forbidden) erro
+            if (roles != null)
+                roles.ToList().ForEach(role => claims.Add(new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Role, role)));
+
+            claims.Add(new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Id, id));
+
+            return new ClaimsIdentity(new GenericIdentity(userName, "Token"), claims);
         }
 
         /// <returns>Date converted to seconds since Unix epoch (Jan 1, 1970, midnight UTC).</returns>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { UserRegistration } from '../../models/user.registration.interface';
 
@@ -16,7 +16,7 @@ export class RegistrationFormComponent implements OnInit {
   isRequesting: boolean = false;
   submitted: boolean = false;
 
-  constructor(private userService: UserService,
+  constructor(private userService: AuthService,
     private router: Router,
     private toastyService: ToastyService) { }
 

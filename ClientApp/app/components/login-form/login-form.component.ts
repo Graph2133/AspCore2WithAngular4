@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Credentials } from '../../models/credentials.interface';
 import { ToastyService } from 'ng2-toasty';
@@ -21,7 +21,7 @@ export class LoginFormComponent implements OnInit {
   submitted: boolean = false;
   credentials: Credentials = { email: '', password: '' };
 
-  constructor(private userService: UserService, 
+  constructor(private userService: AuthService, 
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private toastyService:ToastyService) { }

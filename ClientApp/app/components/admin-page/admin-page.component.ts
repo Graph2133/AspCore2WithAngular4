@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SecretService } from '../../services/secret.service';
 
 @Component({
   selector: 'app-admin-page',
@@ -6,8 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-page.component.css']
 })
 export class AdminPageComponent implements OnInit {
-
-  constructor() { }
+  private data:any;
+  constructor(private secretService:SecretService) {
+    this.secretService.getAdminData().subscribe((response)=>{
+      this.data = response;
+      
+      console.log(this.data);
+    });
+   }
 
   ngOnInit() {
   }

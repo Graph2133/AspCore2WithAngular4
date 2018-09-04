@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { SecretService } from '../../services/secret.service';
 @Component({
   selector: 'app-member-page',
   templateUrl: './member-page.component.html',
@@ -7,9 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MemberPageComponent implements OnInit {
 
-  constructor() { }
+  private data:any;
+  constructor(private secretService:SecretService) { }
 
   ngOnInit() {
+    this.secretService.getMemberData().subscribe((response)=>{
+      this.data = response;
+    });
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs/Subscription';
 import { JwtHelper } from 'angular2-jwt';
 import { Router } from '@angular/router';
@@ -13,12 +13,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     loggedIn: boolean = false;
     subscription: Subscription;
     userName: string = "";
-    constructor(private userService: UserService, private router: Router, private toastyService: ToastyService) {
+    constructor(private userService: AuthService, private router: Router, private toastyService: ToastyService) {
     }
 
     logOut() {
         this.userService.logout();
-
+        this.router.navigate(['/home']);
         this.toastyService.success({
             title: 'Success!',
             msg: 'Succesfully logged out.',
@@ -26,7 +26,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
             showClose: true,
             timeout: 5000
         });
-        this.router.navigate(['/home']);
     }
 
     ngOnInit() {

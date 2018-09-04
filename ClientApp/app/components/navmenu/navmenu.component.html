@@ -15,39 +15,39 @@
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse'>
             <ul class='nav navbar-nav'>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/home']">
+                        <span class='glyphicon glyphicon-home'></span> Home
+                    </a>
+                </li>
                 <li [routerLinkActive]="['link-active']" *ngIf="!loggedIn">
                     <a [routerLink]="['/login']">
-                        <span class='glyphicon glyphicon-home'></span> Login
+                        <span class='glyphicon glyphicon-pencil'></span> Login
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" *ngIf="loggedIn" (click)="logOut()">
                     <a href="">
-                        <span class='glyphicon glyphicon-home'></span> Logout
+                        <span class='glyphicon glyphicon-remove'></span> Logout
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" *ngIf="!loggedIn">
                     <a [routerLink]="['/register']">
-                        <span class='glyphicon glyphicon-home'></span> Register
+                        <span class='glyphicon glyphicon-list-alt'></span> Register
                     </a>
-                </li>
-                <li [routerLinkActive]="['link-active']">
-                        <a [routerLink]="['/home']">
-                            <span class='glyphicon glyphicon-home'></span> Home
-                        </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" *ngIf="loggedIn">
                     <a [routerLink]="['/member']">
-                        <span class='glyphicon glyphicon-home'></span>Member page
+                        <span class='glyphicon glyphicon-info-sign'></span>Member page
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" *ngIf="loggedIn">
                     <a [routerLink]="['/admin']">
-                        <span class='glyphicon glyphicon-home'></span>Admin page
+                        <span class='glyphicon glyphicon-star'></span>Admin page
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{exact: true}">
                     <a [routerLink]="['/vehicles']">
-                        <span class='glyphicon glyphicon-home'></span> Vehicles
+                        <span class='glyphicon glyphicon-send'></span> Vehicles
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']">

@@ -6,6 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 import { BrowserXhr } from '@angular/http';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
+
+//components
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
@@ -13,22 +15,22 @@ import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { VehicleListComponent } from './components/vehicle-list/vehicle-list.component';
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component';
 import { ViewVehicleComponent } from './components/view-vehicle/view-vehicle.component';
-
-import { PaginationComponent } from './components/shared/pagination.component';
-import { PhotoService } from './services/photo.service'
-import { VehicleService } from './services/vehicle.service';
-import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
-import { UserService } from './services/user.service';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { AdminPageComponent } from './components/admin-page/admin-page.component';
 import { MemberPageComponent } from './components/member-page/member-page.component';
+import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { PaginationComponent } from './components/shared/pagination.component';
+
+//services
+import { PhotoService } from './services/photo.service'
+import { VehicleService } from './services/vehicle.service';
+import { AuthService } from './services/auth.service';
 import { AuthGuardService } from './services/Guards/auth-guard.service';
 import { RoleGuardService } from './services/Guards/role-guard.service';
-
+import { SecretService } from './services/secret.service';
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
     { path: 'login', component: LoginFormComponent },
     { path: 'vehicles', component: VehicleListComponent },
     { path: 'home', component: HomeComponent },
@@ -70,7 +72,8 @@ const appRoutes: Routes = [
         VehicleService,
         PhotoService,
         ProgressService,
-        UserService,
+        SecretService,
+        AuthService,
         AuthGuardService,
         RoleGuardService,
         { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
